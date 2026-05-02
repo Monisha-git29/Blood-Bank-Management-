@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="display-6 fw-bold">System Dashboard</h2>
+        <p class="text-muted">Real-time inventory and management overview.</p>
+    </div>
+</div>
+
+<!-- Blood Inventory Stats -->
+<div class="row row-cols-1 row-cols-md-4 g-4 mb-5">
+    {% for stock in stocks %}
+    <div class="col">
+        <div class="card blood-card h-100 border-0">
+            <div class="card-body text-center py-4">
+                <h1 class="display-5 fw-bold mb-0">{{ stock.blood_group }}</h1>
+                <p class="text-muted small text-uppercase fw-bold mb-3">Availability</p>
+                <div class="progress mb-3" style="height: 6px; background-color: #eee;">
+                    <div class="progress-bar" style="width: {{ (stock.quantity_ml / 5000) * 100 }}%; background-color: var(--primary-red);"></div>
+                </div>
+                <h5 class="mb-0 fw-bold">{{ stock.quantity_ml }} <small class="text-muted">ml</small></h5>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row">
+    <!-- Donor Registry -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold"><i class="fas fa-users me-2 text-danger"></i>Donor Registry</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Group</th>
+                                <th>Last Donation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for donor in donors %}
+                            <tr>
+                                <td class="py-3 fw-medium">{{ donor.name }}</td>
+                                <td class="py-3"><span class="badge rounded-pill px-3" style="background-color: #ffebee; color: var(--primary-red);">{{ donor.blood_group }}</span></td>
+                                <td class="py-3 text-muted">{{ donor.last_donation_date }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-muted">No donor records found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request History -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold"><i class="fas fa-ambulance me-2 text-danger"></i>Request History</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Hospital</th>
+                                <th>Group</th>
+                                <th>Qty (ml)</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for req in requests %}
+                            <tr>
+                                <td class="py-3 fw-medium">{{ req.hospital_name }}</td>
+                                <td class="py-3"><span class="badge rounded-pill px-3" style="background-color: #ffebee; color: var(--primary-red);">{{ req.blood_group_required }}</span></td>
+                                <td class="py-3">{{ req.quantity_required_ml }} ml</td>
+                                <td class="py-3"><span class="badge bg-light text-dark border">{{ req.status }}</span></td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-muted">No pending requests.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
